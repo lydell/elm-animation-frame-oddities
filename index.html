@@ -6,15 +6,31 @@
     <title>Elm animation frame oddities</title>
 </head>
 <body>
+    <p>These demos run with a faked <code>requestAnimationFrame</code> of just 1 Hz.</p>
+    <p>Source code: <a href="https://github.com/lydell/elm-animation-frame-oddities">https://github.com/lydell/elm-animation-frame-oddities</a></p>
+    <hr>
     <div>
         <p>Animation starting at <code>init</code>. <code>view</code> never displays 1.</p>
         <iframe src="animation_init.html"></iframe>
     </div>
     <hr>
     <div>
+        <p>Animation starting at <code>init</code>, but uses a port for <code>requestAnimationFrame</code>.</p>
+        <p><code>view</code> does display 1, but is one frame behind.</p>
+        <p>Typing in the text field temporarily syncs it up.</p>
+        <iframe src="animation_init_port.html"></iframe>
+    </div>
+    <hr>
+    <div>
         <p>Animation starting at button click. <code>view</code> is one frame behind.</p>
         <p>You can make it sync up by typing in the text field, but you will lose one frame.</p>
         <iframe src="animation_button.html"></iframe>
+    </div>
+    <hr>
+    <div>
+        <p>Animation starting at button click. <code>view</code> is one frame behind.</p>
+        <p>Typing in the text field temporarily syncs it up.</p>
+        <iframe src="animation_button_port.html"></iframe>
     </div>
 </body>
 </html>
