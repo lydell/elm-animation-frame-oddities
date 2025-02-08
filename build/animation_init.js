@@ -5163,7 +5163,7 @@ var $elm$json$Json$Encode$int = _Json_wrap;
 var $author$project$AnimationInit$show = _Platform_outgoingPort('show', $elm$json$Json$Encode$int);
 var $author$project$AnimationInit$init = function (_v0) {
 	return _Utils_Tuple2(
-		{count: 0},
+		{count: 0, text: ''},
 		$author$project$AnimationInit$show(0));
 };
 var $author$project$AnimationInit$Increment = {$: 'Increment'};
@@ -5309,20 +5309,93 @@ var $author$project$AnimationInit$subscriptions = function (_v0) {
 	return $elm$browser$Browser$Events$onAnimationFrame(
 		$elm$core$Basics$always($author$project$AnimationInit$Increment));
 };
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$AnimationInit$update = F2(
 	function (msg, model) {
-		var count = model.count + 1;
-		return _Utils_Tuple2(
-			_Utils_update(
-				model,
-				{count: count}),
-			$author$project$AnimationInit$show(count));
+		if (msg.$ === 'Increment') {
+			var count = model.count + 1;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{count: count}),
+				$author$project$AnimationInit$show(count));
+		} else {
+			var text = msg.a;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{text: text}),
+				$elm$core$Platform$Cmd$none);
+		}
 	});
+var $author$project$AnimationInit$Text = function (a) {
+	return {$: 'Text', a: a};
+};
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$AnimationInit$view = function (model) {
-	return $elm$html$Html$text(
-		'view: ' + $elm$core$String$fromInt(model.count));
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text(
+				'view: ' + ($elm$core$String$fromInt(model.count) + ' ')),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value(model.text),
+						$elm$html$Html$Events$onInput($author$project$AnimationInit$Text)
+					]),
+				_List_Nil)
+			]));
 };
 var $author$project$AnimationInit$main = $elm$browser$Browser$element(
 	{init: $author$project$AnimationInit$init, subscriptions: $author$project$AnimationInit$subscriptions, update: $author$project$AnimationInit$update, view: $author$project$AnimationInit$view});

@@ -5314,31 +5314,49 @@ var $author$project$AnimationButton$subscriptions = function (model) {
 			$elm$core$Basics$always($author$project$AnimationButton$Increment));
 	}
 };
-var $author$project$AnimationButton$Animating = function (a) {
-	return {$: 'Animating', a: a};
-};
+var $author$project$AnimationButton$Animating = F2(
+	function (a, b) {
+		return {$: 'Animating', a: a, b: b};
+	});
 var $elm$json$Json$Encode$int = _Json_wrap;
 var $author$project$AnimationButton$show = _Platform_outgoingPort('show', $elm$json$Json$Encode$int);
 var $author$project$AnimationButton$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'Start') {
-			return _Utils_Tuple2(
-				$author$project$AnimationButton$Animating(0),
-				$author$project$AnimationButton$show(0));
-		} else {
-			if (model.$ === 'Idle') {
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			} else {
-				var n = model.a;
-				var count = n + 1;
+		switch (msg.$) {
+			case 'Start':
 				return _Utils_Tuple2(
-					$author$project$AnimationButton$Animating(count),
-					$author$project$AnimationButton$show(count));
-			}
+					A2($author$project$AnimationButton$Animating, 0, ''),
+					$author$project$AnimationButton$show(0));
+			case 'Increment':
+				if (model.$ === 'Idle') {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				} else {
+					var n = model.a;
+					var s = model.b;
+					var count = n + 1;
+					return _Utils_Tuple2(
+						A2($author$project$AnimationButton$Animating, count, s),
+						$author$project$AnimationButton$show(count));
+				}
+			default:
+				var text = msg.a;
+				if (model.$ === 'Idle') {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				} else {
+					var n = model.a;
+					return _Utils_Tuple2(
+						A2($author$project$AnimationButton$Animating, n, text),
+						$elm$core$Platform$Cmd$none);
+				}
 		}
 	});
 var $author$project$AnimationButton$Start = {$: 'Start'};
+var $author$project$AnimationButton$Text = function (a) {
+	return {$: 'Text', a: a};
+};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5356,8 +5374,50 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$AnimationButton$view = function (model) {
 	if (model.$ === 'Idle') {
 		return A2(
@@ -5372,8 +5432,23 @@ var $author$project$AnimationButton$view = function (model) {
 				]));
 	} else {
 		var n = model.a;
-		return $elm$html$Html$text(
-			'view: ' + $elm$core$String$fromInt(n));
+		var s = model.b;
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(
+					'view: ' + ($elm$core$String$fromInt(n) + ' ')),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$value(s),
+							$elm$html$Html$Events$onInput($author$project$AnimationButton$Text)
+						]),
+					_List_Nil)
+				]));
 	}
 };
 var $author$project$AnimationButton$main = $elm$browser$Browser$element(

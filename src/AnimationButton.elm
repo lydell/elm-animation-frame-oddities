@@ -3,6 +3,7 @@ port module AnimationButton exposing (main)
 import Browser
 import Browser.Events
 import Html exposing (Html)
+import Html.Attributes
 import Html.Events
 
 
@@ -11,7 +12,7 @@ port show : Int -> Cmd msg
 
 type Model
     = Idle
-    | Animating Int
+    | Animating Int String
 
 
 init : () -> ( Model, Cmd Msg )
@@ -22,25 +23,34 @@ init () =
 type Msg
     = Start
     | Increment
+    | Text String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Start ->
-            ( Animating 0, show 0 )
+            ( Animating 0 "", show 0 )
 
         Increment ->
             case model of
                 Idle ->
                     ( model, Cmd.none )
 
-                Animating n ->
+                Animating n s ->
                     let
                         count =
                             n + 1
                     in
-                    ( Animating count, show count )
+                    ( Animating count s, show count )
+
+        Text text ->
+            case model of
+                Idle ->
+                    ( model, Cmd.none )
+
+                Animating n _ ->
+                    ( Animating n text, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -49,7 +59,7 @@ subscriptions model =
         Idle ->
             Sub.none
 
-        Animating _ ->
+        Animating _ _ ->
             Browser.Events.onAnimationFrame (always Increment)
 
 
@@ -59,8 +69,11 @@ view model =
         Idle ->
             Html.button [ Html.Events.onClick Start ] [ Html.text "Start" ]
 
-        Animating n ->
-            Html.text <| "view: " ++ String.fromInt n
+        Animating n s ->
+            Html.div []
+                [ Html.text <| "view: " ++ String.fromInt n ++ " "
+                , Html.input [ Html.Attributes.value s, Html.Events.onInput Text ] []
+                ]
 
 
 main : Program () Model Msg
