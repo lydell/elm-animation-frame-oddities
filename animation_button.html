@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" style="font-family: monospace;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>button triggered animation</title>
+</head>
+<body>
+    <script src="slow_raf.js"></script>
+    <script src="build/animation_button.js" id="node"></script>
+    <div id="show"></div>
+    <script>
+        const app = Elm.AnimationButton.init({ node });
+        app.ports.show.subscribe(n => {
+            show.textContent = `port: ${n}`;
+        });
+    </script>
+</body>
+</html>

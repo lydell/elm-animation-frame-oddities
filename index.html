@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elm animation frame oddities</title>
+</head>
+<body>
+    <div>
+        <p>Animation starting at <code>init</code>. <code>view</code> never displays 1.</p>
+        <iframe src="animation_init.html"></iframe>
+    </div>
+    <hr>
+    <div>
+        <p>Animation starting at button click. <code>view</code> is one frame behind.</p>
+        <iframe src="animation_button.html"></iframe>
+    </div>
+</body>
+</html>
